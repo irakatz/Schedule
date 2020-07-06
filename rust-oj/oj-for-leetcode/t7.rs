@@ -39,3 +39,29 @@ fn main(){
     }
 
 }
+//非rust
+#include<stdio.h>
+#include <math.h>
+using namespace std;
+int cnt=0;
+int a[100009][2];
+void dfs(int node,int length){
+    if(node==0){return;}
+    cnt=fmax(cnt,length);
+    dfs(a[node][0],length+1);
+    dfs(a[node][1],length+1);
+
+}
+int main(){
+    int n;
+    scanf("%d",&n);
+    
+    for (int i=1;i<=n;i++){
+        int ax = 0;int bx = 0;
+        scanf("%d %d",&ax,&bx);
+    a[i][0]=ax;
+    a[i][1]=bx;
+    }
+    dfs(1,1);
+    printf("%d\n",cnt);
+}

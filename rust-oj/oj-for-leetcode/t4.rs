@@ -26,9 +26,8 @@ fn main(){
         .parse().unwrap();
     let mut b:usize=s.next().unwrap()
         .parse().unwrap();
-    if a>MAX{a=MAX;}
-    if b>MAX{b=MAX;}
-    for i in a..b{
+    if b>MAX{b=MAX-5;}
+    for i in a..(b+1+{
         if allnum[i]==0{continue}
         let strv=i.to_string();
         let mut lt=0;let mut rt=strv.len()-1;
@@ -44,3 +43,43 @@ fn main(){
 }
 //非rust实现
 
+//#include<stdio.h>
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//int main(){
+//    int MAX=10000001;
+//    int a;
+//    int b;
+//    scanf("%d %d",&a,&b);
+//    if (a>MAX){a=MAX;}
+//    if (b>MAX){b=MAX-5;}
+//    int allnum[MAX];
+//    for(int i=0;i<MAX;i++){allnum[i]=1;}
+//    allnum[0]=0;
+//    allnum[1]=0;
+//    for(int i=2;i<MAX;i++){
+//        if(allnum[i]!=0){
+//            int j=2*i;
+//            while(j<MAX){
+//                allnum[j]=0;
+//                j+=i;
+//            }
+//        }
+//    }
+//    for(int i=a;i<=b;i++){
+//        if(allnum[i]!=0){
+//            string s=to_string(allnum[i]);
+//            int lt=0;
+//            int rt=s.length()-1;
+//            bool tf=true;
+//            while(lt<rt){
+//                if(s[lt]!=s[rt]){tf=false;}
+//                lt+=1;
+//                rt-=1;
+//            }
+//            if(tf){printf("%d\n",i);}
+//        }
+//        }
+//
+//}
