@@ -36,10 +36,12 @@ pgd_offset_k用于将虚拟地址转换，得到pmd的指针
 这个就是ioremap_pte_range的详述https://zhuanlan.zhihu.com/p/44944071  
 https://blog.csdn.net/julie0107/article/details/46126231  
 它包含set_pte_at(&init_mm, addr, pte, pfn_pte(pfn, prot))
+define pfn_pte(pfn,prot) __pte(__pfn_to_phys(pfn) | pgprot_val(prot))，根据prot加工第pfn物理页所对应的页表项内容
 注意到set_pte_at在不同架构下实现方式不同，在arm下  
 define set_pte_ext(ptep,pte,ext) cpu_set_pte_ext(ptep,pte,ext)  
 define cpu_set_pte_ext PROC_TABLE(set_pte_ext)  
-define PROC_TABLE(f) processor.f
+define PROC_TABLE(f) processor.f  
+也就是说set_pte_at里最后执行的set_pte_ext看起来没什么影响  
 ### VA转PA?
 实际上就是页表怎么做，这个在mmu.c的create_mapping中有说
 
