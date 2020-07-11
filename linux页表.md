@@ -38,6 +38,7 @@ https://blog.csdn.net/julie0107/article/details/46126231
 注意到set_pte_at在不同架构下实现方式不同，在arm下  
 define set_pte_ext(ptep,pte,ext) cpu_set_pte_ext(ptep,pte,ext)  
 define cpu_set_pte_ext PROC_TABLE(set_pte_ext)  
+define PROC_TABLE(f) processor.f
 ### VA转PA?
 实际上就是页表怎么做，这个在mmu.c的create_mapping中有说
 
