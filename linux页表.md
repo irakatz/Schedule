@@ -35,6 +35,7 @@ pgd_offset_k用于将虚拟地址转换，得到pmd的指针
 然后有err = ioremap_p4d_range(pgd, addr, next, phys_addr, prot);这样的东西。这里p4d可以换成pud,pmd,pte。pte是最后一级  
 这个就是ioremap_pte_range的详述https://zhuanlan.zhihu.com/p/44944071  
 https://blog.csdn.net/julie0107/article/details/46126231  
+它包含set_pte_at(&init_mm, addr, pte, pfn_pte(pfn, prot))
 注意到set_pte_at在不同架构下实现方式不同，在arm下  
 define set_pte_ext(ptep,pte,ext) cpu_set_pte_ext(ptep,pte,ext)  
 define cpu_set_pte_ext PROC_TABLE(set_pte_ext)  
