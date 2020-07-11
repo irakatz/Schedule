@@ -39,3 +39,5 @@
 今天看了linux页表相关的内容。以及一些hypervisor的内容。不过这个是偏ARM的，实际写操作系统应该用不到hypervisor？  
 ### 7.9
 linux页表.md是最近关于页表的学习。ARM32bit是两级页表。
+### 7.10
+仍然是ARM的内容，更新见linux页表.md（实际上这个和Riscv关系不大）

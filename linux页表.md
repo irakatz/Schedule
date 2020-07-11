@@ -22,14 +22,21 @@ ARM的CONFIG_PGTABLE_LEVELS=2，即两级页表，就是PGD->PTE
 内核把物理页作为内存管理的基本单位. 尽管处理器的最小可寻址单位通常是字, 但是, 内存管理单元MMU通常以页为单位进行处理. 因此，从虚拟内存的上来看，页就是最小单位.页帧代表了系统内存的最小单位。
 
 ### 再谈ioremap
-驱动程序不能直接通过物理地址访问I/O内存资源，而必须将它们映射到核心虚地址空间内（通过页表），然后才能根据映射所得到的核心虚地址范围，通过访内指令访问这些I/O内存资源。
-ioremap用来将I/O内存资源的物理地址映射到核心虚地址空间（3GB－4GB）中（这里是内核空间）
+驱动程序不能直接通过物理地址访问I/O内存资源，而必须将它们映射到核心虚地址空间内（通过页表），然后才能根据映射所得到的核心虚地址范围，通过访内指令访问这些I/O内存资源。 
+ioremap用来将I/O内存资源的物理地址映射到核心虚地址空间（3GB－4GB）中（这里是内核空间） 
 ioremap(cookie,size)  
-void __iomem * __ioremap(phys_addr, size, flags); 这个flags是0，没有用
-void __iomem * (*arch_ioremap_caller)(phys_addr_t, size_t,unsigned int, void *) =__arm_ioremap_caller;
-然后是__arm_ioremap_pfn_caller(pfn, offset, size, mtype,caller); 其中pfn是页帧。
-这里使用了err = ioremap_page_range(addr, addr + size, paddr,__pgprot(type->prot_pte));
-ioremap_page_range为一段物理地址建立映射页表，若成功则返回0
-***使用ioremap将它映射到内核虚拟空间，同时又用remap_page_range映射到用户虚拟空间，这样一来，内核和用户都能访问***
-***pgd_offset_k用于将虚拟地址转换，得到pmd的指针
-***我们应该直接关注alloc_init_pte来看创建PTE
+void __iomem * __ioremap(phys_addr, size, flags); 这个flags是0，没有用  
+void __iomem * (*arch_ioremap_caller)(phys_addr_t, size_t,unsigned int, void *) =__arm_ioremap_caller;  
+然后是__arm_ioremap_pfn_caller(pfn, offset, size, mtype,caller); 其中pfn是页帧。 
+这里使用了err = ioremap_page_range(addr, addr + size, paddr,__pgprot(type->prot_pte));  
+ioremap_page_range为一段物理地址建立映射页表，若成功则返回0   
+使用ioremap将它映射到内核虚拟空间，同时又用remap_page_range映射到用户虚拟空间，这样一来，内核和用户都能访问  
+pgd_offset_k用于将虚拟地址转换，得到pmd的指针  
+然后有err = ioremap_p4d_range(pgd, addr, next, phys_addr, prot);这样的东西。这里p4d可以换成pud,pmd,pte。pte是最后一级  
+这个就是ioremap_pte_range的详述https://zhuanlan.zhihu.com/p/44944071  
+https://blog.csdn.net/julie0107/article/details/46126231  
+注意到set_pte_at在不同架构下实现方式不同，在arm下#define set_pte_ext(ptep,pte,ext) cpu_set_pte_ext(ptep,pte,ext)
+
+### VA转PA?
+实际上就是页表怎么做，这个在mmu.c的create_mapping中有说
+
